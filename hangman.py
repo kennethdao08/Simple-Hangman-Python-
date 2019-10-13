@@ -13,7 +13,7 @@ def rand_word(wordlist: list) -> str:
     return wordlist[index]
 
 def create_guess(word: str) -> list:
-    return [None for i in range(len(word))]
+    return ["_" for i in range(len(word))]
 
 def grab_letter() -> str:
     run = True
@@ -43,27 +43,25 @@ def fill_blanks(blank: list, word: str, guess: str) -> list:
 
 def print_state(blanks: list) -> None:
     for char in blanks:
-        if char == None:
-            print("_", end= " ")
-        else:
-            print(char, end= " ")
+        print(char, end= " ")
     return None
+
+def print_remaining_limbs(limbs: int, count: int) -> None:
+        print("\nYou have {} limbs out of {} limbs.\n".format(count, limbs))
 
 def hangman(wordlist: list, limbs: int) -> None:
     word = rand_word(wordlist)
     guesses = create_guess(word)
     game_over = False
     limb_count = 0
-    letter_count = 0
     while (not game_over):
-        if letter_count == len(word):
+        if "_" not in guesses:
             game_over = True
             break
         letter = grab_letter()
         if letter in word:
             print("Nice, you found a letter.")
             guesses = fill_blanks(guesses, word, letter)
-            letter_count += 1
         else:
             print("Letter is not in the word!")
             limb_count += 1
@@ -74,9 +72,7 @@ def hangman(wordlist: list, limbs: int) -> None:
             
         
         print_state(guesses)
-        print()
-        print("You have {} limbs out of {} limbs.".format(limb_count, limbs))
-        print()
+        print_remaining_limbs(LIMBS, limb_count)
 
         
     if limb_count < limbs:
@@ -84,13 +80,4 @@ def hangman(wordlist: list, limbs: int) -> None:
 
     return None
 
-'''
-word = rand_word(WORDLIST)
-guess = create_guess(word)
-
-print(word)
-print(guess)
-
-print(grab_letter())
-'''
 hangman(WORDLIST, LIMBS)
